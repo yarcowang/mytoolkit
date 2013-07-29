@@ -1,0 +1,111 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import re
+import fileinput
+
+# --2u --objname2prefix --noobjname
+# camelCase/PascalCase to underlines
+def cp2u(line, flag):
+	items = []
+	for item in line.split('.'):
+		if item[0].isupper():
+			item = item[0].lower() + item[1:]
+		items.append(item)
+
+	if flag == 1:
+		line = '_'.join(items)
+	else:
+		line = items[-1]
+
+	return re.sub(r'([A-Z])', lambda m: '_' + m.group(1).lower(), line)
+		
+# --u2c, --u2p --objnamedepth n
+# underlines to camelCase/PascalCase
+def u2cp(line, n, flag):
+	pos = 0
+	while n > 0:
+		pos = line.find('_', pos + 1)
+		n -= 1
+
+	if pos > 0:
+		objname = line[:pos].replace('_', '.') + '.'
+		line = line[pos+1:]
+	else:
+		objname = ''
+
+	line = re.sub(r'(_[a-z])', lambda m: m.group(1).replace('_', '').upper(), line)
+	if flag == 2:
+		line = line[0].upper() + line[1:]
+	
+	return objname + line
+
+def helpMe():
+	print '''namerule -- an utility script to convert name rule between underscores and camelCase/PascalCase
+
+  -u, --2u	from camelCase/PascalCase to underscores, default `--noobjname`
+  -c, --u2c	from underscores to camelCase
+  -p, --u2p	from underscores to PascalCase
+  -h, --help	given this help
+  --objname2prefix	only used in `--2u`, make objname as prefix, for example, `item.userName` will be converted into `item_user_name`
+  --noobjname	only used in `--2u`, remove the prefix, for example, `item.userName` will be converted `user_name`
+  --objnamedepth <n>	only used in `--u2c` or `--u2p`, figure out the depth of the objname, for example, `item_user_name` will be converted into `item.userName` if the depth is 1 and `item.user.name` if the depth is 2
+
+for example:
+
+$ echo -n 'item.userName' | ./namerule -u
+user_name
+$ echo -n 'item.userName' | ./namerule -u --noobjname
+user_name
+$ echo -n 'item.userName' | ./namerule -u --objname2prefix
+item_user_name
+$ echo -n 'item_user_name' | ./namerule -p
+ItemUserName
+$ echo -n 'item_user_name' | ./namerule -p --objnamedepth 1
+item.UserName
+$ echo -n 'item_user_name' | ./namerule -p --objnamedepth 2
+item.user.Name
+$ echo -n 'item_user_name' | ./namerule -c --objnamedepth 2
+item.user.name
+$ echo -n 'item_user_name' | ./namerule -c
+itemUserName
+'''
+
+if __name__ == '__main__':
+	import sys
+	import getopt
+
+	optlist, args = getopt.getopt(sys.argv[1:], 'ucph', ['2u', 'u2c', 'u2p', 'help', 'objname2prefix', 'noobjname', 'objnamedepth='])
+	is_cp2u = True
+	flag = 0
+	n = 0
+
+	for k,v in optlist:
+		if k == '-u' or k == '--2u':
+			is_cp2u = True
+		elif k == '-c' or k == '--u2c':
+			is_cp2u = False
+			flag = 1
+		elif k == '-p' or k == '--u2p':
+			is_cp2u = False
+			flag = 2
+		elif k == '-h' or k == '--help':
+			helpMe()
+			sys.exit(0)
+		elif k == '--objname2prefix':
+			flag = 1
+		elif k == '--noobjname':
+			flag = 0
+		elif k == '--objnamedepth':
+			n = int(v)
+
+	while True:
+		line = sys.stdin.readline()
+		if not line:
+			break
+
+		if is_cp2u:
+			print cp2u(line, flag)
+		else:
+			print u2cp(line, n, flag)
+
