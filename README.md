@@ -8,6 +8,8 @@ Contain some useful toolkit (python script). For example, `generating random pas
 
 How to use
 -----------
+**use -h to see more help**
+
 * genpwd -- an utility tool for generating random password
 
 ```bash
@@ -17,13 +19,27 @@ IOBAOY_Z
 $ genpwd -h
 ```
 
-Extra notice
-------------
-Something you need to know...
+* namerule -- an utility script to convert name rule between underscores and camelCase/PascalCase
+
+```bash
+$ echo -n 'item.userName' | ./namerule -u
+user_name
+$ echo -n 'item.userName' | ./namerule -u --noobjname
+user_name
+$ echo -n 'item.userName' | ./namerule -u --objname2prefix
+item_user_name
+$ echo -n 'item_user_name' | ./namerule -p
+ItemUserName
+$ echo -n 'item_user_name' | ./namerule -p --objnamedepth 1
+item.UserName
+$ echo -n 'item_user_name' | ./namerule -p --objnamedepth 2
+item.user.Name
+$ echo -n 'item_user_name' | ./namerule -c --objnamedepth 2
+item.user.name
+```
 
 ChangeLog
 ----------
-Change log...
 
 Contact
 --------
