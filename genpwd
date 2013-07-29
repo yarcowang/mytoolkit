@@ -1,0 +1,117 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from random import *
+
+# digit + hex + alpha + underscore + upper + email + other printable
+validstring = '0123456789 abcdef ghijklmnopqrstuvwxyz _ ABCDEFGHIJKLMNOPQRSTUVWXYZ .@- !"#$%&\'()*+,/:;<=>?[\\]^`'
+group_names = {'digit' : 0, 'hex' : 1, 'alphanum' : 2, 'varname' : 3, 'alphanum+' : 4, 'email' : 5, 'all' : 6}
+
+# generate random string
+def rdmstr(group_offset = 4, howmany = 8):
+	global validstring
+
+	validstr = validstring.split(' ')
+	validstr = ''.join(validstr[:group_offset+1])
+	ret = ''
+	offset = len(validstr) - 1
+
+	# gen process
+	i = 0
+	while i<howmany:
+		ret += validstr[randint(0, offset)]
+		i += 1
+
+	return ret
+
+def help():
+	print '''genpwd v0.3 copyright and copyleft all by yarco.
+You could use it anywhere but without business.(08.03.13-09.9.21)
+(If you use it in business, you should pay for some money...)
+
+genpwd [-h] [-c] [-adepvxA] [-l <level>] <n> -- output random string for password or other purpose
+-a
+    equal to -l 2 or -l alphanum
+-c
+    make it clear. that means
+      0 and o would't be choosen
+      1,I and l would't be choosen
+      2 and z would't be choosen
+-d
+    equal to -l 0 or -l digit
+-e
+    equal to -l 5 or -l email
+-h
+    given this help
+-l <level>
+    <level> could be one of the following numbers or the meanning like 'digit', default level is 4
+    0 or digit means 0-9, equal to -d
+    1 or hex means 0-9 a-f, equal to -x
+    2 or alphanum means 0-9 a-z, equal to -a
+    3 or varname means 0-9 a-z _, equal to -v
+    4 or alphanum+ means 0-9 a-z _ A-Z, equal to -A
+    5 or email means 0-9 a-z _ A-Z .@-, equal to -e
+    6 or all means all pritable charactor, equal to -p
+-p
+    equal to -l 6 or -l all
+-s
+    show valid charactor list
+-v
+    equal to -l 3 or -l varname
+-x
+    equal to -l 1 or -l hex
+-A
+    equal to -l 4 or -l alphanum
+<n>
+    the width of the password string you'd like to use, default is 8
+'''
+
+if __name__ == '__main__':
+	import getopt, sys
+
+	try:
+		optlist, args= getopt.getopt(sys.argv[1:], 'hcsl:adepvxA')
+	except:
+		print 'Error options...use -h to view help'
+		exit(0)
+
+	optlist = dict(optlist)
+	if not optlist:
+		level = 4
+	elif optlist.has_key('-h'):
+		help()
+		exit(0)
+	elif optlist.has_key('-s'):
+		print 'valid charactors are as follow(in groups):'
+		print ' ' + validstring
+		exit(0)
+	elif optlist.has_key('-l') and optlist['-l'].isdigit():
+		level = int(optlist['-l'])
+	elif optlist.has_key('-l') and optlist['-l'] in group_names.keys():
+		level = group_names[optlist['-l']]
+	elif optlist.has_key('-a'):
+		level = 2
+	elif optlist.has_key('-d'):
+		level = 0
+	elif optlist.has_key('-e'):
+		level = 5
+	elif optlist.has_key('-p'):
+		level = 6
+	elif optlist.has_key('-v'):
+		level = 3
+	elif optlist.has_key('-x'):
+		level = 1
+	elif optlist.has_key('-A'):
+		level = 4
+	else:
+		level = 4
+
+	if optlist.has_key('-c'):
+		validstring = validstring.replace('0', '').replace('o', '').replace('1', '').replace('l', '').replace('2', '').replace('z', '').replace('I', '')
+
+	if not args:
+		width = 8
+	else:
+		width = int(args[0])
+
+	print rdmstr(level, width)
