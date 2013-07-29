@@ -25,8 +25,8 @@ def rdmstr(group_offset = 4, howmany = 8):
 	return ret
 
 def help():
-	print '''genpwd v0.3 copyright and copyleft all by yarco.
-You could use it anywhere but without business.(08.03.13-09.9.21)
+	print '''genpwd v0.0.3 copyright and copyleft all by yarco.
+You could use it anywhere but without business.
 (If you use it in business, you should pay for some money...)
 
 genpwd [-h] [-c] [-adepvxA] [-l <level>] <n> -- output random string for password or other purpose

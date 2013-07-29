@@ -41,8 +41,11 @@ def u2cp(line, n, flag):
 	return objname + line
 
 def helpMe():
-	print '''namerule -- an utility script to convert name rule between underscores and camelCase/PascalCase
+	print '''namerule v0.0.1 copyright and copyleft all by yarco.
+You could use it anywhere but without business.
+(If you use it in business, you should pay for some money...)
 
+namerule -- an utility script to convert name rule between underscores and camelCase/PascalCase
   -u, --2u	from camelCase/PascalCase to underscores, default `--noobjname`
   -c, --u2c	from underscores to camelCase
   -p, --u2p	from underscores to PascalCase
@@ -53,21 +56,21 @@ def helpMe():
 
 for example:
 
-$ echo -n 'item.userName' | ./namerule -u
+$ echo -n 'item.userName' | namerule -u
 user_name
-$ echo -n 'item.userName' | ./namerule -u --noobjname
+$ echo -n 'item.userName' | namerule -u --noobjname
 user_name
-$ echo -n 'item.userName' | ./namerule -u --objname2prefix
+$ echo -n 'item.userName' | namerule -u --objname2prefix
 item_user_name
-$ echo -n 'item_user_name' | ./namerule -p
+$ echo -n 'item_user_name' | namerule -p
 ItemUserName
-$ echo -n 'item_user_name' | ./namerule -p --objnamedepth 1
+$ echo -n 'item_user_name' | namerule -p --objnamedepth 1
 item.UserName
-$ echo -n 'item_user_name' | ./namerule -p --objnamedepth 2
+$ echo -n 'item_user_name' | namerule -p --objnamedepth 2
 item.user.Name
-$ echo -n 'item_user_name' | ./namerule -c --objnamedepth 2
+$ echo -n 'item_user_name' | namerule -c --objnamedepth 2
 item.user.name
-$ echo -n 'item_user_name' | ./namerule -c
+$ echo -n 'item_user_name' | namerule -c
 itemUserName
 '''
 
