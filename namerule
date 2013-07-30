@@ -108,7 +108,7 @@ if __name__ == '__main__':
 			break
 
 		if is_cp2u:
-			print cp2u(line, flag)
+			print cp2u(line, flag),
 		else:
-			print u2cp(line, n, flag)
+			print u2cp(line, n, flag),
 
